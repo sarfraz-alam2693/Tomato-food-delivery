@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ExploreMenu.css";
-import { menu_list } from "../../assets/assets";
+import axios from "axios";
+import "react-slideshow-image/dist/styles.css";
 
-const Explore = ({ category, setCategory }) => {
+const Explore = () => {
+  const [categoryList, setCategoryList] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/user/category/list`)
+      .then((response) => {
+        // console.log("response", response);
+        setCategoryList(response.data.data);
+      });
+  }, []);
   return (
     <div className="explore-menu" id="explore-menu">
       <h1>Explore our Menu</h1>
@@ -12,25 +22,21 @@ const Explore = ({ category, setCategory }) => {
         ,one delicious meal at a time.
       </p>
       <div className="explore-menu-list">
-        {menu_list.map((item, index) => {
-          // console.log("item", item);
-
+        {categoryList.map((item, index) => {
           return (
-            <div
-              key={index}
-              onClick={() =>
-                setCategory((prev) =>
-                  prev === item.menu_name ? "All" : item.menu_name
-                )
-              }
-            >
+            <div key={index}>
               <img
-                className={category === item.menu_name ? "active" : ""}
-                src={item.menu_image}
+                src={`http://localhost:8000/images/categories/${item.image}`}
                 alt=""
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
               />
 
-              <p>{item.menu_name}</p>
+              <p>{item.categoryname}</p>
             </div>
           );
         })}

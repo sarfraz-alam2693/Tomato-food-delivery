@@ -1,30 +1,27 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import "./foodDisplay.css";
-import { StoreContext } from "../../context/StoreContext";
 import FoodItem from "../FoodItem/FoodItem";
+import axios from "axios";
 
 // use Disstructuring to get the category property from category object....
 const FoodDisplay = ({ category }) => {
-  console.log("category", category);
+  const [foodmenuList, setFoodmenuList] = useState([]);
+  // console.log("category", category);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/user/foodmenu/list`)
+      .then((response) => {
+        // console.log("foodmenuList", response);
+        setFoodmenuList(response.data.data);
+      });
+  }, []);
 
-  const { food_list } = useContext(StoreContext);
   return (
     <div className="food-display" id="food-display">
       <h2>Top dishes near you</h2>
       <div className="food-display-list">
-        {food_list.map((item, index) => {
-          if (category === "All" || category === item.category) {
-            return (
-              <FoodItem
-                key={index}
-                id={item._id}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                image={item.image}
-              />
-            );
-          }
+        {foodmenuList.map((item, index) => {
+          return <FoodItem item={item} key={index} />;
         })}
       </div>
     </div>
