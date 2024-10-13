@@ -4,11 +4,16 @@ import Header from "../../components/Header/Header";
 import ExploreMenu from "../../components/ExploreMenu/ExploreMenu";
 import FoodDisplay from "../../components/foodDisplay/foodDisplay";
 import AppDownload from "../../components/AppDownload/AppDownload";
+import Navbar from "../../components/Navbar/Navbar";
+import LoginPopup from "../../components/LoginPopup/LoginPopup";
 
 const Home = () => {
+  const [showLogin, setShowLogin] = useState(false);
   const [category, setCategory] = useState("All");
   return (
     <div>
+      {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
+      <Navbar setShowLogin={setShowLogin} />
       <Header />
       <ExploreMenu category={category} setCategory={setCategory} />
       <FoodDisplay category={category} />
