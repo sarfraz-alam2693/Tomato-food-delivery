@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./AdminNavbar/Navbar";
 import axios from "axios";
-import { Button, Container, Modal, Row, Table } from "react-bootstrap";
+import { Button, Container, Modal, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import Select from "react-select";
+import MenuFoodList from "./MenuFoodList";
 
 const MenuItem = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -129,39 +130,11 @@ const MenuItem = () => {
       </Button>
 
       {displayedItems && displayedItems.length > 0 ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>sno-</th>
-              <th>Category </th>
-              <th>Menu</th>
-              <th>Description</th>
-              <th style={{ width: "70px" }}>Price</th>
-              <th>Image</th>
-              <th>Active</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedItems.map((item, index) => (
-              <tr key={index}>
-                <td>{index + 1 + currentPage * itemsPerPage}</td>
-                <td>{item.categoryname}</td>
-                <td>{item.itemName}</td>
-                <td>{item.description}</td>
-                <td>Rs-{item.price}</td>
-                <td>
-                  <img
-                    src={`http://localhost:8000/images/fooditems/${item.image}`}
-                    alt=""
-                    width="80px"
-                    height="80px"
-                  />
-                </td>
-                <td>{item.active == 1 ? "On" : "Off"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <MenuFoodList
+          displayedItems={displayedItems}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+        />
       ) : (
         <p>No Data Founds</p>
       )}
