@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CategoryList from "./CategoryList";
 
 const Category = () => {
   const [showModal, setModal] = useState(false);
@@ -74,9 +75,7 @@ const Category = () => {
       console.error("Error:", error);
     }
   };
-  const handleDelete = () => {
-    console.log("delete");
-  };
+
   return (
     <div>
       <Navbar />
@@ -141,37 +140,7 @@ const Category = () => {
         </Modal.Footer>
       </Modal>
       {categoryList.length ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>S no-</th>
-              <th>Name</th>
-              <th>Image</th>
-              <th>Description</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categoryList.map((elem, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{elem.categoryname}</td>
-                <td>
-                  <img
-                    src={`http://localhost:8000/images/categories/${elem.image}`}
-                    style={{ width: "100px", height: "100px" }}
-                  />
-                </td>
-                <td>{elem.description}</td>
-                <td>
-                  <Button variant="danger" onClick={handleDelete}>
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <CategoryList categoryList={categoryList} />
       ) : (
         "No record found"
       )}
