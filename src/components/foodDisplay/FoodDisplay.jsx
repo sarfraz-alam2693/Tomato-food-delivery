@@ -6,16 +6,28 @@ import axios from "axios";
 // use Disstructuring to get the category property from category object....
 const FoodDisplay = ({ category }) => {
   const [foodmenuList, setFoodmenuList] = useState([]);
-  // console.log("category", category);
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/user/foodmenu/list`)
-      .then((response) => {
-        // console.log("foodmenuList", response);
-        setFoodmenuList(response.data.data);
-      });
+    getFoodByCategoryId(category);
   }, []);
 
+  useEffect(() => {
+    getFoodByCategoryId(category);
+  }, [category]);
+
+  /**
+   * Filter Menu by category
+   * @param {Number} categoryId
+   * return Array
+   */
+  function getFoodByCategoryId(categoryId) {
+    axios
+      .get(
+        `http://localhost:8000/api/user/foodmenu/list?category=${categoryId}`
+      )
+      .then((response) => {
+        setFoodmenuList(response.data.data);
+      });
+  }
   return (
     <div className="food-display" id="food-display">
       <h2>Top dishes near you</h2>

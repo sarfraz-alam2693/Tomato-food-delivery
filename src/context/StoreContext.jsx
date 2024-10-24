@@ -14,8 +14,6 @@ const StoreContextProvider = ({ children }) => {
       [itemId]: prev[itemId] ? prev[itemId] + 1 : 1,
     }));
   };
-  // console.log("cartItem", cartItems);
-
   // Remove Cart Item
   const removeFromCart = (itemId) => {
     setCartItems((prev) => ({

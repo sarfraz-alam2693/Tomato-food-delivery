@@ -1,65 +1,103 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import "./Cart.css";
-import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import Navbar from "../../components/Navbar/Navbar";
 
 const Cart = () => {
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount } =
-    useContext(StoreContext);
+  const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
-  return (
-    <div className="cart">
-      <div className="cart-items"></div>
-      <div className="cart-items-title">
-        <p>Items</p>
-        <p>Title</p>
-        <p>Price</p>
-        <p>Quantity</p>
-        <p>Total</p>
-        <p>Remove</p>
-      </div>
-      <br />
-      <hr />
-      {food_list.map((item, index) => {
-        console.log("item", cartItems);
+  const [sum, setSum] = useState(0);
+  // Retrieve cart items from localStorage when the component loads
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("Cart")) || [];
+    let obj = {};
+    storedCart.forEach((elem) => {
+      if (obj.hasOwnProperty(elem.id)) {
+        obj[elem.id].qty += 1;
+      } else {
+        obj[elem.id] = { ...elem, qty: 1 };
+      }
+    });
+    const cartArray = Object.values(obj);
+    setCartItems(cartArray);
+  }, []);
 
-        if (cartItems[item._id] > 0) {
-          return (
-            <>
-              <div className="cart-items-title cart-items-item" key={index}>
-                <img src={item.image} alt="" />
-                <p>{item.name}</p>
-                <p>Rs-{item.price}</p>
-                <p>{cartItems[item._id]}</p>
-                <p>Rs-{item.price * cartItems[item._id]}</p>
-                <p className="cross" onClick={() => removeFromCart(item._id)}>
-                  x
-                </p>
-              </div>
-              <hr />
-            </>
-          );
-        }
-      })}
-      <div className="cart-bottom-">
-        <div className="cart-total">
-          <h2>Cart Totals</h2>
-          <div></div>
-          <button onClick={() => navigate("/order")}>
-            PROCEED TO CHECKOUT
-          </button>
+  // Update the localStorage when cartItems changes
+  useEffect(() => {
+    totalItem(cartItems);
+    // localStorage.setItem("Cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const removeFromCart = (itemId) => {
+    const updatedCart = cartItems.filter((elem) => {
+      return elem.id !== itemId;
+    });
+    setCartItems(updatedCart);
+  };
+  const totalItem = (cartItems) => {
+    let sum = 0;
+    cartItems.forEach((elem) => {
+      sum += elem.price * elem.qty;
+    });
+    setSum(sum);
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="cart" key="cart">
+        <div className="cart-items"></div>
+        <div className="cart-items-title">
+          <p>Items</p>
+          <p>Title</p>
+          <p>Quantity</p>
+          <p>Price</p>
+          <p>Total</p>
+          <p>Remove</p>
         </div>
-        <div className="cart-promocode">
-          <div>
-            <p>if you have a Promocode, Enter it here </p>
-            <div className="cart-promocode-input">
-              <input type="text" placeholder="promocode" />
-              <button>Submit</button>
-            </div>
+        <br />
+        <hr />
+        {cartItems &&
+          cartItems.map((item, index) => {
+            return (
+              <React.Fragment key={item.id}>
+                <div
+                  className="cart-items-title cart-items-item"
+                  // key={item.id}
+                  key={item.id}
+                >
+                  <img
+                    src={`http://localhost:8000/images/fooditems/${item.image}`}
+                    alt=""
+                  />
+                  <p>{item.itemName}</p>
+                  <p>{item.qty}</p>
+                  <p>Rs{item.price}</p>
+                  <p>Rs{item.qty * item.price}</p>
+                  <p className="cross" onClick={() => removeFromCart(item.id)}>
+                    x
+                  </p>
+                </div>
+                <hr />
+              </React.Fragment>
+            );
+          })}
+
+        <div className="cart-bottom-">
+          <div className="cart-total-summary">
+            <h2>Cart Totals Rs={sum}</h2>
+            <button
+              onClick={() =>
+                navigate("/order", { state: { totalItemsAmount: sum } })
+              }
+            >
+              PROCEED TO CHECKOUT
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

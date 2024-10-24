@@ -21,8 +21,6 @@ const Category = () => {
     axios
       .get(`http://localhost:8000/api/admin/category/list`)
       .then((response) => {
-        // console.log("categoryList", response);
-
         setCategoryList(response.data.data);
       });
   }, []);
@@ -44,11 +42,9 @@ const Category = () => {
     } else {
       setPreview("");
     }
-    // console.log(image);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log("innnnn", categoryName, description, image);
     const formData = new FormData();
     formData.append("categoryName", categoryName);
     formData.append("description", description);
@@ -65,7 +61,6 @@ const Category = () => {
         })
         .then((response) => {
           if (response.status === 200) {
-            // console.log("category", response);
             toast.success(response.data.message);
             setModal(false);
             setCategoryList([...categoryList, response.data.data]);
