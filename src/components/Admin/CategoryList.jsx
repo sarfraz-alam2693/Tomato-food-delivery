@@ -2,9 +2,8 @@ import React from "react";
 import { Button, Table } from "react-bootstrap";
 
 const CategoryList = ({ categoryList }) => {
-  const handleDelete = () => {
-    console.log("delete");
-  };
+  const handleDelete = () => {};
+
   return (
     <div>
       <Table striped bordered hover>

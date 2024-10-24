@@ -7,7 +7,7 @@ import Footer from "./components/Footer/Footer";
 import AdminHome from "./components/Admin/AdminHome";
 import Category from "./components/Admin/Category";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MenuItem from "./components/Admin/MenuItem";
 
